@@ -1,7 +1,15 @@
 <?php
+
+define ("CONTINENTES", [
+  "eu" => "Europa",
+  "af" => "Africa",
+  "as" => "Asia",
+  "am" => "America"
+]);  
+
 abstract class Anfibio {
   protected string $codigo;
-  protected dateTime $fechaAlta;
+  protected int $fechaAlta;
   protected float $precio = 0;
   protected string $nombreCientifico;
   protected string $nombreComun;
@@ -18,6 +26,10 @@ abstract class Anfibio {
 
   }
 
+  function setPrecio (float $precio): void {
+    $this->precio = $precio;
+  }
+
   public function getCodigo() {
     return $this->codigo;
   }
@@ -26,10 +38,7 @@ abstract class Anfibio {
     return $this->fechaAlta;
   }
 
-  public function getPrecio() {
-    return $this->precio;
-  }
-
+ 
   public function getNombreCientifico() {
     return $this->nombreCientifico;
   }
@@ -55,17 +64,52 @@ class Anuro extends Anfibio {
   $this->continente = $continente ? $continente : 'Europa';
  }
 
-
-
+ public function getPrecio() {
+  switch($this->continente) {
+    case CONTINENTES ['eu']:
+        return $this->precio;
+      break;
+    case CONTINENTES ['af']:
+    case CONTINENTES ['as']:
+        return $this->precio * 1.15;
+      break;
+    case  CONTINENTES['am']:
+        return $this->precio * 1.25;
+      break;
+  }
+  return $this->precio;
 }
+
+function __toString(): string {
+   return parent::__toString().'-'.$this->continente.'-'.$this->getPrecio();
+}
+
+  
+}
+
+
+
+
 
 class Urodelo extends Anfibio {
+  protected string $tipo;
+
+  function setTipo (string $tipo = 'anfibio') {
+    $this-> tipo = $tipo;
+  }
+  function getPrecio() {
+    return $this->precio * 1.05;
+  }
+
+  function __toString(): string {
+    return parent::__toString().'-'.$this->tipo.'-'.$this->getPrecio();
+ }
 
 }
 
- $rana = new Anuro('Hyla arborea', 'Ranita de San Antonio', 34.6, 2024, 'charcas', 'Africa');
+ $rana = new Anuro ('Hyla arborea', 'Ranita de San Antonio', 34.6, 2024, 'charcas', 'Africa');
 
-$triton= new Urodelo('Triturus marmoratus', 'Tritón jaspeado', 47, 2023, 'estanque');
+$triton= new Urodelo ('Triturus marmoratus', 'Tritón jaspeado', 47, 2023, 'estanque');
 
 echo $rana;
 
